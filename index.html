@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<title>Complete Releases</title>
+	<script src="angular.min.js"></script>
+	<script src="angular-animate.min.js"></script>
+	<script src="ui-bootstrap-custom-tpls-2.5.0.min.js"></script>
+	<script src="script.js"></script>
+	<link rel="stylesheet" href="bootstrap.css">
+	<link rel="stylesheet" href="style.css">
+</head>
+
+<body ng-app="releaseApp" ng-controller="releaseCtrl" layout="column">
+	<h1>Fully scanlated releases</h1>
+	<div class="row">
+		<div class="col-md-5">
+			<p class="input-group">
+				<input type="search" class="form-control" name="titleQuery" ng-model="titleQuery" placeholder="Search title" />
+				<span class="input-group-btn">
+					<button type="button" class="btn btn-default" ng-click="isCollapsed = !isCollapsed">Tags</button>
+				</span>
+				<input placeholder="MM/yyyy" type="text" id="#datepick" class="form-control" uib-datepicker-popup="MM/yyyy" ng-model="dt" is-open="popup1.opened" datepicker-options="{minMode: 'month'}" datepicker-mode="'month'" ng-required="false" close-text="Close" alt-input-formats="altInputFormats" />
+				<span class="input-group-btn">
+					<button type="button" class="btn btn-default" ng-click="openDate()"><i class="glyphicon glyphicon-calendar"></i></button>
+				</span>
+				<span class="input-group-btn">
+					<button type="button" class="btn btn-default" ng-click="naToggle()" ng-model="toggleNA">Date N/A</button>
+				</span>
+			</p>
+		</div>
+	</div>
+	<div uib-collapse="isCollapsed" id="collapseTags">
+		<div class="well well-lg">
+			<span ng-repeat="tag in tags">
+				<button type="button" class="btn btn-default" ng-click="tagToggle($event, tag)" uib-btn-checkbox>{{tag.name}}</button>
+			</span>
+		</div>
+	</div>
+	<div class="tbl-header">
+		<table cellpadding="0" cellspacing="0" border="0">
+			<thead>
+				<tr>
+					<th>Title</th>
+					<th id="imSpecial">Tags</th>
+					<th>Type</th>
+					<th>Date</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+	<div class="tbl-content" ng-stretch>
+		<table cellpadding="0" cellspacing="0" border="0">
+			<tbody>
+				<tr ng-repeat="x in data | proFilter:'title':titleQuery:tags:'toggle':dt:toggleNA:type | limitTo:100 ">
+					<td><a ng-href="https://www.mangaupdates.com/series.html?id={{x.link}}">{{x.title}}</a></td>
+					<td><ul style="margin-bottom: 0px"><li ng-repeat="y in x.tags">{{y.tag}}</li></ul></td>
+					<td>{{x.type}}</td>
+					<td>{{x.date}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</body>
+</html>
